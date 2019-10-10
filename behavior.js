@@ -51,10 +51,7 @@ function initialize() {
     const data = initChartData(BUDGET, DAYS_IN_MONTH);
     data.actual = AccumulateSpendingOverMonth(BUDGET, monthsTransactions, CURR_YEAR, CURR_MONTH);
 
-    // data.actual = [400, 343, 282, 282];
-
-    showBurnDown(CHART_EL_ID, DAYS_IN_MONTH, data.actual, data.ideal, BUDGET);
-
+    generateBurndownChart(CHART_EL_ID, DAYS_IN_MONTH, data.actual, data.ideal, BUDGET);
 }
 
 function AccumulateSpendingOverMonth(budget, transactions, yearNum, monthNum) {
@@ -119,25 +116,7 @@ function initChartData(budget, daysInMonth) {
     }
 }
 
-function parseSpending(data) {
-
-}
-
-
-/**
- * Sum elements of an array up to the index provided.
- */
-function sumArrayUpTo(arrData, index) {
-    var total = 0;
-    for (var i = 0; i <= index; i++) {
-        if (arrData.length > i) {
-            total += arrData[i];
-        }
-    }
-    return total;
-}
-
-function showBurnDown(elementId, daysInMonth, burndownData, ideaData, budget) {
+function generateBurndownChart(elementId, daysInMonth, actualData, idealData, budget) {
 
     var speedCanvas = document.getElementById(elementId);
 
@@ -150,12 +129,12 @@ function showBurnDown(elementId, daysInMonth, burndownData, ideaData, budget) {
     }
 
 
-    var speedData = {
+    var chartData = {
         labels: dates,
         datasets: [
             {
                 label: "Burndown",
-                data: burndownData,
+                data: actualData,
                 fill: false,
                 borderColor: "#EE6868",
                 backgroundColor: "#EE6868",
@@ -167,7 +146,7 @@ function showBurnDown(elementId, daysInMonth, burndownData, ideaData, budget) {
                 backgroundColor: "lightgray",
                 lineTension: 0,
                 fill: false,
-                data: ideaData
+                data: idealData
             },
         ]
     };
@@ -193,7 +172,7 @@ function showBurnDown(elementId, daysInMonth, burndownData, ideaData, budget) {
 
     var lineChart = new Chart(speedCanvas, {
         type: 'line',
-        data: speedData,
+        data: chartData,
         options: chartOptions
     });
 
