@@ -7,16 +7,16 @@
     <title>Simple Budget</title>
 
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="./behavior.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
-
 </head>
 
 <body>
     <div class="header">
-
+        <h1>Burndown Budget</h1>
     </div>
 
     <div class="main">
@@ -24,8 +24,21 @@
             <div class="burndown">
                 <div style="width:400px;"><canvas id="burndown-chart"></canvas></div>
             </div>
-            <div class="transactoins">
-
+            <div id="transactions-list">
+                <div class="transaction">
+                    <div class="transaction-title">Test Transaction</div>
+                    <div class="transaction-details">
+                        <div class="transaction-amount">-$12.50</div>
+                        <div class="transaction-date">10/01/19</div>
+                    </div>
+                </div>
+                <div class="transaction">
+                        <div class="transaction-title">Test Transaction Number 2</div>
+                        <div class="transaction-details">
+                            <div class="transaction-amount">-$102.00</div>
+                            <div class="transaction-date">10/05/19</div>
+                        </div>
+                    </div>
             </div>
         </div>
 
@@ -35,6 +48,15 @@
 
     </div>
 
+    <template id="transaction-template">
+        <div class="transaction">
+            <div class="transaction-title"></div>
+            <div class="transaction-details">
+                <div class="transaction-amount"></div>
+                <div class="transaction-date"></div>
+            </div>
+        </div>
+    </template>
 </body>
 
 </html>

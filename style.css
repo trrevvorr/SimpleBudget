@@ -1,0 +1,29 @@
+body {
+    font-family: Roboto;
+}
+
+#transactions-list {
+    display: grid;
+    grid-gap: 1rem;
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 1rem;
+}
+
+.transaction {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    border-top: 1px solid lightgray;
+    padding-top: 1rem;
+}
+
+.transaction-details {text-align: right;display: grid;}
+
+.transaction-title {
+    font-size: 1.25rem;
+    line-height: 2rem;
+}
+
+.transaction-date {
+    font-size: 0.75rem;
+    color: gray;
+}

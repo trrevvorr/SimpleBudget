@@ -11,12 +11,14 @@ const TRANSACTIONS = {
     "NSOIBDNSNK" : {
         title: "nook",
         amount: -89.00,
-        date: "2019-09-01"
+        date: "2019-09-01",
+        tag: "trevor spending" 
     },
     "LKSOISNDON" : {
         title: "shelly flood",
         amount: -31.00,
-        date: "2019-10-01"
+        date: "2019-10-01",
+        tag: "trevor spending" 
     },
     "NSOINHSIN" : {
         title: "pens",
@@ -26,32 +28,41 @@ const TRANSACTIONS = {
     "SLKDJHLSKJ": {
         title: "Home Assistant Cloud",
         amount: -5.00,
-        date: "2019-10-05"
+        date: "2019-10-05",
+        tag: "trevor spending" 
     },
     "LKAJLSKJSL": {
         title: "Hardware & Tools",
         amount: -89.00,
-        date: "2019-10-05"
+        date: "2019-10-05",
+        tag: "trevor spending" 
     },
     "LKSJFIUHSS": {
         title: "Hardware",
         amount: -27.00,
-        date: "2019-10-05"
+        date: "2019-10-05",
+        tag: "trevor spending" 
     },
     "BUYVKUVSS": {
         title: "Ikea Smart Lights",
         amount: -44.00,
-        date: "2019-10-06"
+        date: "2019-10-06",
+        tag: "trevor spending" 
     }
 };
 
 
 function initialize() {
     const monthsTransactions = getTransactionsForMonth(TRANSACTIONS, CURR_YEAR, CURR_MONTH);
-    const data = initChartData(BUDGET, DAYS_IN_MONTH);
-    data.actual = AccumulateSpendingOverMonth(BUDGET, monthsTransactions, CURR_YEAR, CURR_MONTH);
 
-    generateBurndownChart(CHART_EL_ID, DAYS_IN_MONTH, data.actual, data.ideal, BUDGET);
+    buildBurndownChart(monthsTransactions);
+    displayTransactions(monthsTransactions);
+}
+
+function buildBurndownChart(monthsTransactions) {
+    const chartData = initChartData(BUDGET, DAYS_IN_MONTH);
+    chartData.actual = AccumulateSpendingOverMonth(BUDGET, monthsTransactions, CURR_YEAR, CURR_MONTH);
+    generateBurndownChart(CHART_EL_ID, DAYS_IN_MONTH, chartData.actual, chartData.ideal, BUDGET);
 }
 
 function AccumulateSpendingOverMonth(budget, transactions, yearNum, monthNum) {
@@ -177,3 +188,47 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
     });
 
 }
+
+// #region display Transactions
+function displayTransactions(transactions) {
+    clearTransactions()
+    Object.values(transactions).forEach(transaction => displayResult(transaction));
+}
+
+function clearTransactions() {
+    let list = document.getElementById("transactions-list");
+    list.innerHTML = "";
+}
+
+function displayResult(transaction) {
+    let list = document.getElementById("transactions-list");
+    let template = document.getElementById("transaction-template");
+    let clone = template.content.cloneNode(true);
+    const currencyFormater = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      });
+
+    clone.querySelector(".transaction-title").textContent = transaction.title;
+    clone.querySelector(".transaction-amount").textContent = currencyFormater.format(transaction.amount);
+    clone.querySelector(".transaction-date").textContent = transaction.date;
+
+    list.appendChild(clone);
+}
+
+function formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
+    try {
+      decimalCount = Math.abs(decimalCount);
+      decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+  
+      const negativeSign = amount < 0 ? "-" : "";
+  
+      let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+      let j = (i.length > 3) ? i.length % 3 : 0;
+  
+      return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+    } catch (e) {
+      console.log(e)
+    }
+  };
+// #endregion
