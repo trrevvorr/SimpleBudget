@@ -59,11 +59,7 @@ function initialize() {
     displayTransactions(monthsTransactions);
 }
 
-function buildBurndownChart(monthsTransactions) {
-    const chartData = initChartData(BUDGET, DAYS_IN_MONTH);
-    chartData.actual = AccumulateSpendingOverMonth(BUDGET, monthsTransactions, CURR_YEAR, CURR_MONTH);
-    generateBurndownChart(CHART_EL_ID, DAYS_IN_MONTH, chartData.actual, chartData.ideal, BUDGET);
-}
+// #region parse transactions
 
 function AccumulateSpendingOverMonth(budget, transactions, yearNum, monthNum) {
     const spendingAccumulation = [];
@@ -114,6 +110,16 @@ function getTransactionsInDateRange(transactions, firstDay, lastDay) {
     return filteredTransactions;
 }
 
+// #endregion
+
+// #region charting
+
+function buildBurndownChart(monthsTransactions) {
+    const chartData = initChartData(BUDGET, DAYS_IN_MONTH);
+    chartData.actual = AccumulateSpendingOverMonth(BUDGET, monthsTransactions, CURR_YEAR, CURR_MONTH);
+    generateBurndownChart(CHART_EL_ID, DAYS_IN_MONTH, chartData.actual, chartData.ideal, BUDGET);
+}
+
 function initChartData(budget, daysInMonth) {
     const ideal = [];
     for (let i = 0; i < daysInMonth; i++) {
@@ -131,12 +137,18 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
 
     var speedCanvas = document.getElementById(elementId);
 
-    Chart.defaults.global.defaultFontFamily = "Arial";
+    Chart.defaults.global.defaultFontFamily = "Roboto";
     Chart.defaults.global.defaultFontSize = 14;
+    Chart.defaults.global.defaultFontColor = "#D9D0D0";
+    Chart.defaults.global.responsive = true;
 
     let dates = [];
     for (let i = 0; i < daysInMonth; i++) {
-        dates.push(i + 1);
+        let label = i+1;
+        if (label % 5 !== 0) {
+            label = "";
+        }
+        dates.push(`${label}`);
     }
 
 
@@ -147,17 +159,19 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
                 label: "Burndown",
                 data: actualData,
                 fill: false,
-                borderColor: "#EE6868",
-                backgroundColor: "#EE6868",
+                borderColor: "#C09AD9",
+                backgroundColor: "#C09AD9",
                 lineTension: 0,
             },
             {
                 label: "Ideal",
-                borderColor: "#lightgray",
-                backgroundColor: "lightgray",
+                borderColor: "#596273",
+                backgroundColor: "#596273",
                 lineTension: 0,
                 fill: false,
-                data: idealData
+                data: idealData,
+                pointRadius: 0,
+                borderDash: [10,5]
             },
         ]
     };
@@ -165,17 +179,20 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
     var chartOptions = {
         legend: {
             display: false,
-            position: 'top',
-            labels: {
-                boxWidth: 80,
-                fontColor: 'black'
-            }
         },
         scales: {
             yAxes: [{
                 ticks: {
                     min: 0,
                     max: budget
+                },
+                gridLines: {
+                    display: false
+                }
+            }],
+            xAxes: [{
+                gridLines: {
+                    display: false
                 }
             }]
         }
@@ -189,7 +206,10 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
 
 }
 
+// #endregion
+
 // #region display Transactions
+
 function displayTransactions(transactions) {
     clearTransactions()
     Object.values(transactions).forEach(transaction => displayResult(transaction));
@@ -231,4 +251,5 @@ function formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
       console.log(e)
     }
   };
-// #endregion
+
+  // #endregion
