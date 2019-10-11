@@ -145,10 +145,18 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
     let dates = [];
     for (let i = 0; i < daysInMonth; i++) {
         let label = i+1;
-        if (label % 5 !== 0) {
-            label = "";
+        if (label === 1) {
+            dates.push(`${label}`);
+        } else if (label === daysInMonth) {
+            dates.push(`${label}`);
+        } else if (label +1 === daysInMonth) {
+            dates.push("");
+        } else if (label % 5 === 0) {
+            dates.push(`${label}`);
+        } else {
+            dates.push("");
         }
-        dates.push(`${label}`);
+        
     }
 
 
@@ -184,7 +192,8 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
             yAxes: [{
                 ticks: {
                     min: 0,
-                    max: budget
+                    max: budget,
+                    callback: (value, index, values) => ('  $' + value)
                 },
                 gridLines: {
                     display: false

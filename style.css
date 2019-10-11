@@ -10,6 +10,13 @@ body {
     margin: 1rem;
 }
 
+.chart-wrapper {
+    position: sticky;
+    top: 10px;
+    background-color: #071826;
+    border-bottom: 1px solid #596273;
+}
+
 .burndown {
     position: relative;
     margin: 0 1rem;
@@ -25,8 +32,11 @@ body {
 .transaction {
     display: grid;
     grid-template-columns: 2fr 1fr;
+    padding: 0.5rem 1rem 0rem 1rem;
+}
+
+#transactions-list .transaction:not(:first-child) {
     border-top: 1px solid #596273;
-    padding: 0.5rem 0.5rem 0rem 0.5rem;
 }
 
 .transaction-details {text-align: right;display: grid;}
@@ -36,7 +46,11 @@ body {
     line-height: 2rem;
 }
 
+.transaction-amount {
+    color: #C09AD9;
+}
+
 .transaction-date {
     font-size: 0.75rem;
-    color: #C09AD9;
+    color: #596273;
 }
