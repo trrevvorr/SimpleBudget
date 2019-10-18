@@ -1,62 +1,108 @@
+// import Chart from 'chart.js';
+// import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 document.addEventListener('DOMContentLoaded', initialize, false);
 
 const CHART_EL_ID = "burndown-chart";
-const BUDGET = 400;
 const CURR_DATE = new Date();
 const CURR_YEAR = CURR_DATE.getUTCFullYear();
 const CURR_MONTH = CURR_DATE.getUTCMonth() + 1; // months are 0-indexed
 const CURR_DAY = CURR_DATE.getUTCDate();
 const DAYS_IN_MONTH = getDaysInMonth(CURR_YEAR, CURR_MONTH);
-const TRANSACTIONS = {
-    "NSOIBDNSNK" : {
-        title: "nook",
-        amount: -89.00,
-        date: "2019-09-01",
-        tag: "trevor spending" 
+let SELECTED_BUDGET = "TREVORS_BUDGET";
+const BUDGETS = {
+    "TREVORS_BUDGET": {
+        title: "Trevor's Budget",
+        budget: 400,
+        transactions: {
+            "NSOIBDNSNK": {
+                title: "nook",
+                amount: -89.00,
+                date: "2019-09-01"
+            },
+            "LKSOISNDON": {
+                title: "shelly flood",
+                amount: -31.00,
+                date: "2019-10-01"
+            },
+            "NSOINHSIN": {
+                title: "pens",
+                amount: -10.00,
+                date: "2019-10-01"
+            },
+            "SLKDJHLSKJ": {
+                title: "Home Assistant Cloud",
+                amount: -5.00,
+                date: "2019-10-05"
+            },
+            "LKAJLSKJSL": {
+                title: "Hardware & Tools",
+                amount: -89.00,
+                date: "2019-10-05"
+            },
+            "LKSJFIUHSS": {
+                title: "Hardware",
+                amount: -27.00,
+                date: "2019-10-05"
+            },
+            "BUYVKUVSS": {
+                title: "Ikea Smart Lights",
+                amount: -44.00,
+                date: "2019-10-06"
+            },
+            "KJSBIUSVB": {
+                title: "Electrical boxes",
+                amount: -2.00,
+                date: "2019-10-12"
+            },
+            "KJSNIUBSIS": {
+                title: "batteries",
+                amount: -11.00,
+                date: "2019-10-16"
+            }
+            ,
+            "IBUSOBSOIUDBS": {
+                title: "saving for headphones",
+                amount: -25.00,
+                date: "2019-10-01"
+            }
+        }
     },
-    "LKSOISNDON" : {
-        title: "shelly flood",
-        amount: -31.00,
-        date: "2019-10-01",
-        tag: "trevor spending" 
-    },
-    "NSOINHSIN" : {
-        title: "pens",
-        amount: -10.00,
-        date: "2019-10-01"
-    },
-    "SLKDJHLSKJ": {
-        title: "Home Assistant Cloud",
-        amount: -5.00,
-        date: "2019-10-05",
-        tag: "trevor spending" 
-    },
-    "LKAJLSKJSL": {
-        title: "Hardware & Tools",
-        amount: -89.00,
-        date: "2019-10-05",
-        tag: "trevor spending" 
-    },
-    "LKSJFIUHSS": {
-        title: "Hardware",
-        amount: -27.00,
-        date: "2019-10-05",
-        tag: "trevor spending" 
-    },
-    "BUYVKUVSS": {
-        title: "Ikea Smart Lights",
-        amount: -44.00,
-        date: "2019-10-06",
-        tag: "trevor spending" 
+    "DINING_OUT": {
+        title: "Dining Out",
+        budget: 400,
+        transactions: {
+            "KJBSIUBS": {
+                title: "simply spanish",
+                amount: -12.72,
+                date: "2019-10-02"
+            },
+            "KJHSISUBPS": {
+                title: "greenroom",
+                amount: -7.88,
+                date: "2019-10-04"
+            }
+        }
     }
 };
 
+function getCurrBudgetTransactions() {
+    return BUDGETS[SELECTED_BUDGET].transactions;
+}
 
-function initialize() {
-    const monthsTransactions = getTransactionsForMonth(TRANSACTIONS, CURR_YEAR, CURR_MONTH);
+function getCurrBudgetBudget() {
+    return BUDGETS[SELECTED_BUDGET].budget;
+}
 
-    buildBurndownChart(monthsTransactions);
-    displayTransactions(monthsTransactions);
+function getCurrBudgetTitle() {
+    return BUDGETS[SELECTED_BUDGET].ticks;
+}
+
+    function initialize() {
+        const monthsTransactions = getTransactionsForMonth(getCurrBudgetTransactions(), CURR_YEAR, CURR_MONTH);
+
+buildBurndownChart(monthsTransactions);
+displayTransactions(monthsTransactions);
 }
 
 // #region parse transactions
@@ -85,14 +131,14 @@ function getDaysInMonth(yearNum, monthNum) {
 function getTransactionsForMonth(transactions, yearNum, monthNum) {
     const firstDayOfMonth = new Date(Date.UTC(yearNum, monthNum - 1));
     const lastDayOfMonth = new Date(Date.UTC(yearNum, monthNum, 0, 23, 59, 59, 999));
-    
+
     return getTransactionsInDateRange(transactions, firstDayOfMonth, lastDayOfMonth);
 }
 
 function getTransactionsForDay(transactions, yearNum, monthNum, dayNum) {
     const firstMSOfDay = new Date(Date.UTC(yearNum, monthNum - 1, dayNum));
     const lastMSOfDay = new Date(Date.UTC(yearNum, monthNum - 1, dayNum, 23, 59, 59, 999));
-    
+
     return getTransactionsInDateRange(transactions, firstMSOfDay, lastMSOfDay);
 }
 
@@ -115,9 +161,10 @@ function getTransactionsInDateRange(transactions, firstDay, lastDay) {
 // #region charting
 
 function buildBurndownChart(monthsTransactions) {
-    const chartData = initChartData(BUDGET, DAYS_IN_MONTH);
-    chartData.actual = AccumulateSpendingOverMonth(BUDGET, monthsTransactions, CURR_YEAR, CURR_MONTH);
-    generateBurndownChart(CHART_EL_ID, DAYS_IN_MONTH, chartData.actual, chartData.ideal, BUDGET);
+    const budget = getCurrBudgetBudget();
+    const chartData = initChartData(budget, DAYS_IN_MONTH);
+    chartData.actual = AccumulateSpendingOverMonth(budget, monthsTransactions, CURR_YEAR, CURR_MONTH);
+    generateBurndownChart(CHART_EL_ID, DAYS_IN_MONTH, chartData.actual, chartData.ideal, budget);
 }
 
 function initChartData(budget, daysInMonth) {
@@ -144,19 +191,19 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
 
     let dates = [];
     for (let i = 0; i < daysInMonth; i++) {
-        let label = i+1;
+        let label = i + 1;
         if (label === 1) {
             dates.push(`${label}`);
         } else if (label === daysInMonth) {
             dates.push(`${label}`);
-        } else if (label +1 === daysInMonth) {
+        } else if (label + 1 === daysInMonth) {
             dates.push("");
         } else if (label % 5 === 0) {
             dates.push(`${label}`);
         } else {
             dates.push("");
         }
-        
+
     }
 
 
@@ -170,6 +217,18 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
                 borderColor: "#C09AD9",
                 backgroundColor: "#C09AD9",
                 lineTension: 0,
+                datalabels: {
+                    backgroundColor: '#C09AD9',
+                    color: "#071826",
+                    font: {
+                        weight: "bold"
+                    },
+                    borderRadius: "7",
+                    anchor: "end",
+                    align: 'top',
+                    display: (context) => (context.dataIndex + 1 === context.dataset.data.length),
+                    formatter: amount => formatCurrency(amount)
+                }
             },
             {
                 label: "Ideal",
@@ -179,7 +238,10 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
                 fill: false,
                 data: idealData,
                 pointRadius: 0,
-                borderDash: [10,5]
+                borderDash: [10, 5],
+                datalabels: {
+                    display: false
+                }
             },
         ]
     };
@@ -200,6 +262,11 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
                 }
             }],
             xAxes: [{
+                ticks: {
+                    autoSkip: false,
+                    maxRotation: 0,
+                    minRotation: 0
+                },
                 gridLines: {
                     display: false
                 }
@@ -210,6 +277,7 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
     var lineChart = new Chart(speedCanvas, {
         type: 'line',
         data: chartData,
+        // plugins: [ChartDataLabels],
         options: chartOptions
     });
 
@@ -233,13 +301,9 @@ function displayResult(transaction) {
     let list = document.getElementById("transactions-list");
     let template = document.getElementById("transaction-template");
     let clone = template.content.cloneNode(true);
-    const currencyFormater = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      });
 
     clone.querySelector(".transaction-title").textContent = transaction.title;
-    clone.querySelector(".transaction-amount").textContent = currencyFormater.format(transaction.amount);
+    clone.querySelector(".transaction-amount").textContent = formatCurrency(transaction.amount, true);
     clone.querySelector(".transaction-date").textContent = transaction.date;
 
     list.appendChild(clone);
@@ -247,18 +311,36 @@ function displayResult(transaction) {
 
 function formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
     try {
-      decimalCount = Math.abs(decimalCount);
-      decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
-  
-      const negativeSign = amount < 0 ? "-" : "";
-  
-      let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
-      let j = (i.length > 3) ? i.length % 3 : 0;
-  
-      return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+        decimalCount = Math.abs(decimalCount);
+        decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+
+        const negativeSign = amount < 0 ? "-" : "";
+
+        let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+        let j = (i.length > 3) ? i.length % 3 : 0;
+
+        return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
     } catch (e) {
-      console.log(e)
+        console.log(e)
     }
-  };
+};
 
   // #endregion
+
+function formatCurrency (amount, cents) {
+    if (cents) {
+        return currencyFormaterCents.format(amount);
+    } else {
+        return currencyFormater.format(amount);
+    }
+}
+const currencyFormaterCents = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+});
+
+const currencyFormater = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0
+});

@@ -7,47 +7,59 @@
     <title>Simple Budget</title>
 
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+    <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
 
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="./behavior.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.3/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 </head>
 
 <body>
-    <div class="header">
-        <h1>Burndown Budget</h1>
-    </div>
-
-    <div class="main">
-        <div class="spending-view">
-            <div class="chart-wrapper">
-                <div class="burndown">
-                    <div><canvas id="burndown-chart"></canvas></div>
+    <div class="upper">
+        <div class="header">
+            <h1>Burndown Budget</h1>
+            <select class="budget-select">
+                <option>test 1</option>
+                <option>test 2</option>
+            </select>
+            <!-- <div class="budget-select dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown button
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Something else here</a>
                 </div>
-            </div>
-            <div id="transactions-list">
-                <div class="transaction">
-                    <div class="transaction-title">Test Transaction</div>
-                    <div class="transaction-details">
-                        <div class="transaction-amount">-$12.50</div>
-                        <div class="transaction-date">10/01/19</div>
-                    </div>
-                </div>
-                <div class="transaction">
-                        <div class="transaction-title">Test Transaction Number 2</div>
-                        <div class="transaction-details">
-                            <div class="transaction-amount">-$102.00</div>
-                            <div class="transaction-date">10/05/19</div>
-                        </div>
-                    </div>
+            </div> -->
+        </div>
+        <div class="chart-wrapper">
+            <div class="burndown">
+                <div><canvas id="burndown-chart"></canvas></div>
             </div>
         </div>
-
     </div>
 
-    <div class="footer">
-
+    <div class="spending-view">
+        <div id="transactions-list">
+            <div class="transaction">
+                <div class="transaction-title">Test Transaction</div>
+                <div class="transaction-details">
+                    <div class="transaction-amount">-$12.50</div>
+                    <div class="transaction-date">10/01/19</div>
+                </div>
+            </div>
+            <div class="transaction">
+                <div class="transaction-title">Test Transaction Number 2</div>
+                <div class="transaction-details">
+                    <div class="transaction-amount">-$102.00</div>
+                    <div class="transaction-date">10/05/19</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <template id="transaction-template">

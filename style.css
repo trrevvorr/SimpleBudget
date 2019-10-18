@@ -6,13 +6,34 @@ body {
     margin: 0;
 }
 
+h1 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    margin: 0;
+}
+
+.upper {
+    position: sticky;
+    top: 1rem;
+    margin-top: 1rem;
+}
+
 .header {
     margin: 1rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    height: 2rem;
+}
+
+.budget-select {
+    display: flex;
+    justify-content: flex-end;
+    border-color: #C09AD9;
+    color: #C09AD9;
+    background-color: transparent;
 }
 
 .chart-wrapper {
-    position: sticky;
-    top: 10px;
     background-color: #071826;
     border-bottom: 1px solid #596273;
 }
