@@ -9,7 +9,7 @@ const CURR_YEAR = CURR_DATE.getUTCFullYear();
 const CURR_MONTH = CURR_DATE.getUTCMonth() + 1; // months are 0-indexed
 const CURR_DAY = CURR_DATE.getUTCDate();
 const DAYS_IN_MONTH = getDaysInMonth(CURR_YEAR, CURR_MONTH);
-let SELECTED_BUDGET = "TREVORS_BUDGET";
+let DEFAULT_BUDGET = "TREVORS_BUDGET";
 const BUDGETS = {
     "TREVORS_BUDGET": {
         title: "Trevor's Budget",
@@ -81,28 +81,64 @@ const BUDGETS = {
                 title: "greenroom",
                 amount: -7.88,
                 date: "2019-10-04"
+            },
+            "BSIUBSDP": {
+                title: "Sean O'Callaghan's",
+                amount: -41.87,
+                date: "2019-10-18"
             }
         }
     }
 };
 
+function getSelectedBudget() {
+    return document.querySelector("#budget-select").value;
+
+}
+
 function getCurrBudgetTransactions() {
-    return BUDGETS[SELECTED_BUDGET].transactions;
+    return BUDGETS[getSelectedBudget()].transactions;
 }
 
 function getCurrBudgetBudget() {
-    return BUDGETS[SELECTED_BUDGET].budget;
+    return BUDGETS[getSelectedBudget()].budget;
 }
 
 function getCurrBudgetTitle() {
-    return BUDGETS[SELECTED_BUDGET].ticks;
+    return BUDGETS[getSelectedBudget()].ticks;
 }
 
-    function initialize() {
-        const monthsTransactions = getTransactionsForMonth(getCurrBudgetTransactions(), CURR_YEAR, CURR_MONTH);
+function initialize() {
+    initBudgetSelect();
+    initializeBudget();
+}
 
-buildBurndownChart(monthsTransactions);
-displayTransactions(monthsTransactions);
+function initializeBudget() {
+    const monthsTransactions = getTransactionsForMonth(getCurrBudgetTransactions(), CURR_YEAR, CURR_MONTH);
+    buildBurndownChart(monthsTransactions);
+    displayTransactions(monthsTransactions);
+}
+
+function initBudgetSelect() {
+    let budgetSelect = document.querySelector("#budget-select");
+    budgetSelect.innerHTML = "";
+    budgetSelect.addEventListener("change", changeBudgetSelection);
+
+    let budgetKeys = Object.keys(BUDGETS);
+    budgetKeys.forEach( key => {
+        let budgetOption = document.createElement("option");
+
+        budgetOption.value = key;
+        if (DEFAULT_BUDGET === key) {
+            budgetOption.selected = "selected";
+        }
+        budgetOption.textContent = BUDGETS[key].title;
+        budgetSelect.appendChild(budgetOption);
+    });
+}
+
+function changeBudgetSelection() {
+    initializeBudget();
 }
 
 // #region parse transactions
@@ -325,9 +361,9 @@ function formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
     }
 };
 
-  // #endregion
+// #endregion
 
-function formatCurrency (amount, cents) {
+function formatCurrency(amount, cents) {
     if (cents) {
         return currencyFormaterCents.format(amount);
     } else {

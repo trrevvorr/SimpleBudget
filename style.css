@@ -25,7 +25,7 @@ h1 {
     height: 2rem;
 }
 
-.budget-select {
+#budget-select {
     display: flex;
     justify-content: flex-end;
     border-color: #C09AD9;
