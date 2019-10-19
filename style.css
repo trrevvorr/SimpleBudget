@@ -1,7 +1,14 @@
 body {
+    --theme-bg-color: #071826;
+    --theme-font-color: #D9D0D0;
+    --theme-accent-color-1: #C09AD9;
+    --theme-subtle-color-1: #596273;
+}
+
+body {
     font-family: Roboto;
-    background-color: #071826;
-    color: #D9D0D0;
+    background-color: var(--theme-bg-color);
+    color: var(--theme-font-color);
     padding: 0;
     margin: 0;
 }
@@ -28,14 +35,14 @@ h1 {
 #budget-select {
     display: flex;
     justify-content: flex-end;
-    border-color: #C09AD9;
-    color: #C09AD9;
+    border-color: var(--theme-accent-color-1);
+    color: var(--theme-accent-color-1);
     background-color: transparent;
 }
 
 .chart-wrapper {
-    background-color: #071826;
-    border-bottom: 1px solid #596273;
+    background-color: var(--theme-bg-color);
+    border-bottom: 1px solid var(--theme-subtle-color-1);
 }
 
 .burndown {
@@ -46,7 +53,7 @@ h1 {
 #transactions-list {
     display: grid;
     grid-gap: 0.5rem;
-    border-bottom: 1px solid #596273;
+    border-bottom: 1px solid var(--theme-subtle-color-1);
     padding-bottom: 0.5rem;
 }
 
@@ -57,7 +64,7 @@ h1 {
 }
 
 #transactions-list .transaction:not(:first-child) {
-    border-top: 1px solid #596273;
+    border-top: 1px solid var(--theme-subtle-color-1);
 }
 
 .transaction-details {text-align: right;display: grid;}
@@ -68,10 +75,10 @@ h1 {
 }
 
 .transaction-amount {
-    color: #C09AD9;
+    color: var(--theme-accent-color-1);
 }
 
 .transaction-date {
     font-size: 0.75rem;
-    color: #596273;
+    color: var(--theme-subtle-color-1);
 }

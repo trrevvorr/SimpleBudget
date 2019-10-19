@@ -1,8 +1,11 @@
-// import Chart from 'chart.js';
-// import ChartDataLabels from 'chartjs-plugin-datalabels';
+// #region constants
 
-document.addEventListener('DOMContentLoaded', initialize, false);
-
+const THEME_COLORS = {
+    bgColor: "#071826",
+    fontColor: "#D9D0D0",
+    accentColor1: "#C09AD9",
+    subtleColor1: "#596273",
+}
 const CHART_EL_ID = "burndown-chart";
 const CURR_DATE = new Date();
 const CURR_YEAR = CURR_DATE.getUTCFullYear();
@@ -91,6 +94,10 @@ const BUDGETS = {
     }
 };
 
+// #endregion constants
+
+// #region getters
+
 function getSelectedBudget() {
     return document.querySelector("#budget-select").value;
 
@@ -108,6 +115,12 @@ function getCurrBudgetTitle() {
     return BUDGETS[getSelectedBudget()].ticks;
 }
 
+// #endregion getters
+
+// #region initializers
+
+document.addEventListener('DOMContentLoaded', initialize, false);
+
 function initialize() {
     initBudgetSelect();
     initializeBudget();
@@ -118,6 +131,10 @@ function initializeBudget() {
     buildBurndownChart(monthsTransactions);
     displayTransactions(monthsTransactions);
 }
+
+// #endregion initializers
+
+// #region budget select
 
 function initBudgetSelect() {
     let budgetSelect = document.querySelector("#budget-select");
@@ -140,6 +157,8 @@ function initBudgetSelect() {
 function changeBudgetSelection() {
     initializeBudget();
 }
+
+// #endregion budget select
 
 // #region parse transactions
 
@@ -206,7 +225,7 @@ function buildBurndownChart(monthsTransactions) {
 function initChartData(budget, daysInMonth) {
     const ideal = [];
     for (let i = 0; i < daysInMonth; i++) {
-        ideal.push(budget - (budget / daysInMonth) * i);
+        ideal.push(Math.round(budget - (budget / daysInMonth) * i));
     }
 
     return {
@@ -222,7 +241,7 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
 
     Chart.defaults.global.defaultFontFamily = "Roboto";
     Chart.defaults.global.defaultFontSize = 14;
-    Chart.defaults.global.defaultFontColor = "#D9D0D0";
+    Chart.defaults.global.defaultFontColor = THEME_COLORS.fontColor;
     Chart.defaults.global.responsive = true;
 
     let dates = [];
@@ -247,15 +266,15 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
         labels: dates,
         datasets: [
             {
-                label: "Burndown",
+                label: "Remaining",
                 data: actualData,
                 fill: false,
-                borderColor: "#C09AD9",
-                backgroundColor: "#C09AD9",
+                borderColor: THEME_COLORS.accentColor1,
+                backgroundColor: THEME_COLORS.accentColor1,
                 lineTension: 0,
                 datalabels: {
-                    backgroundColor: '#C09AD9',
-                    color: "#071826",
+                    backgroundColor: THEME_COLORS.accentColor1,
+                    color: THEME_COLORS.bgColor,
                     font: {
                         weight: "bold"
                     },
@@ -268,8 +287,8 @@ function generateBurndownChart(elementId, daysInMonth, actualData, idealData, bu
             },
             {
                 label: "Ideal",
-                borderColor: "#596273",
-                backgroundColor: "#596273",
+                borderColor: THEME_COLORS.subtleColor1,
+                backgroundColor: THEME_COLORS.subtleColor1,
                 lineTension: 0,
                 fill: false,
                 data: idealData,
@@ -363,6 +382,7 @@ function formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
 
 // #endregion
 
+// #region formatters
 function formatCurrency(amount, cents) {
     if (cents) {
         return currencyFormaterCents.format(amount);
@@ -380,3 +400,5 @@ const currencyFormater = new Intl.NumberFormat('en-US', {
     currency: 'USD',
     minimumFractionDigits: 0
 });
+
+// #endregion formatters
