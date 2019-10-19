@@ -1,0 +1,31 @@
+body {
+    --theme-bg-color: #071826;
+    --theme-font-color: #D9D0D0;
+    --theme-accent-color-1: #C09AD9;
+    --theme-subtle-color-1: #596273;
+}
+
+body {
+    font-family: Roboto;
+    background-color: var(--theme-bg-color);
+    color: var(--theme-font-color);
+    margin: 3rem 1rem;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2rem;
+    line-height: 2rem;
+    margin-bottom: 2rem;
+}
+
+a {
+    color: var(--theme-bg-color);
+    background-color: var(--theme-accent-color-1);
+    text-decoration: none;
+    border-radius: 1rem;
+    font-size: 1rem;
+    padding: 0.25rem 1rem;
+}
+
+a {}
